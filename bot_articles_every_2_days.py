@@ -4,7 +4,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from datetime import time, timedelta
 import asyncio
 
-TOKEN = "7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s"
+import os
+TOKEN = os.environ["TOKEN"]
 
 # Простий список статей
 articles = [
