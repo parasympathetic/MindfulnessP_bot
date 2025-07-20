@@ -3,16 +3,13 @@ from threading import Thread
 
 from telegram import Update
 from telegram.ext import (
-    ApplicationBuilder, CommandHandler, ContextTypes, JobQueue, Job
+    ApplicationBuilder, CommandHandler, ContextTypes, JobQueue
 )
 from datetime import datetime, timedelta
-import nest_asyncio
 import asyncio
-import os  # ✅ Для отримання динамічного порту
+import os
 
-nest_asyncio.apply()
-
-# 🔵 Flask-сервер
+# ✅ Flask-сервер
 flask_app = Flask('')
 
 @flask_app.route('/')
@@ -20,11 +17,11 @@ def home():
     return "✅ Бот працює!"
 
 def run_flask():
-    port = int(os.environ.get("PORT", 5000))  # ✅ Replit-friendly порт
+    port = int(os.environ.get("PORT", 5000))  # Для PythonAnywhere або Replit
     print(f"🌐 Flask сервер стартує на порту {port}")
     flask_app.run(host='0.0.0.0', port=port)
 
-# 🔵 Статті
+# ✅ Статті
 articles = [
     "Стаття 1: Вступ до медитації — як працює розум.",
     "Стаття 2: Дихання як інструмент заспокоєння.",
@@ -35,7 +32,7 @@ articles = [
 
 user_progress = {}
 
-# 🔵 /start
+# ✅ /start команда
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     user_progress[chat_id] = {
@@ -53,7 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id=chat_id
     )
 
-# 🔵 Перевірка та надсилання статей
+# ✅ Надсилання статей
 async def send_article_if_due(context: ContextTypes.DEFAULT_TYPE):
     chat_id = context.job.chat_id
     progress = user_progress.get(chat_id)
@@ -77,18 +74,18 @@ async def send_article_if_due(context: ContextTypes.DEFAULT_TYPE):
             text="🟢 Всі статті надіслано. Дякую, що читав(ла)!"
         )
 
-# 🔵 JobQueue ініціалізація
+# ✅ JobQueue ініціалізація
 async def setup_jobqueue(app):
     if app.job_queue is None:
         app.job_queue = JobQueue()
         await app.job_queue.set_application(app)
         app.job_queue.start()
 
-# 🔵 Запуск
+# ✅ Запуск бота
 async def run_bot():
     app_bot = (
         ApplicationBuilder()
-        .token("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s")
+        .token("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s")  # ⛔ не залишай токен у відкритому коді
         .post_init(setup_jobqueue)
         .build()
     )
@@ -97,7 +94,7 @@ async def run_bot():
     print("✅ Бот запущено")
     await app_bot.run_polling()
 
-# 🔵 Старт всього
+# ✅ Старт
 if __name__ == "__main__":
     Thread(target=run_flask).start()
-    asyncio.get_event_loop().run_until_complete(run_bot())
+    asyncio.run(run_bot())
