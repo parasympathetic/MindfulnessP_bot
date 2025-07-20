@@ -9,19 +9,19 @@ from datetime import datetime, timedelta
 import asyncio
 import os
 
-# ✅ Flask-сервер
-flask_app = Flask('')
+# 🔹 Flask-сервер
+flask_app = Flask(__name__)
 
 @flask_app.route('/')
 def home():
     return "✅ Бот працює!"
 
 def run_flask():
-    port = int(os.environ.get("PORT", 5000))  # Для PythonAnywhere або Replit
+    port = int(os.environ.get("PORT", 5000))  # Порт для Replit або PythonAnywhere
     print(f"🌐 Flask сервер стартує на порту {port}")
     flask_app.run(host='0.0.0.0', port=port)
 
-# ✅ Статті
+# 🔹 Статті
 articles = [
     "Стаття 1: Вступ до медитації — як працює розум.",
     "Стаття 2: Дихання як інструмент заспокоєння.",
@@ -32,7 +32,7 @@ articles = [
 
 user_progress = {}
 
-# ✅ /start команда
+# 🔹 Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     user_progress[chat_id] = {
@@ -50,7 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id=chat_id
     )
 
-# ✅ Надсилання статей
+# 🔹 Відправлення наступних статей
 async def send_article_if_due(context: ContextTypes.DEFAULT_TYPE):
     chat_id = context.job.chat_id
     progress = user_progress.get(chat_id)
@@ -74,18 +74,18 @@ async def send_article_if_due(context: ContextTypes.DEFAULT_TYPE):
             text="🟢 Всі статті надіслано. Дякую, що читав(ла)!"
         )
 
-# ✅ JobQueue ініціалізація
+# 🔹 Ініціалізація JobQueue
 async def setup_jobqueue(app):
     if app.job_queue is None:
         app.job_queue = JobQueue()
         await app.job_queue.set_application(app)
         app.job_queue.start()
 
-# ✅ Запуск бота
+# 🔹 Запуск бота
 async def run_bot():
     app_bot = (
         ApplicationBuilder()
-        .token("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s")  # ⛔ не залишай токен у відкритому коді
+        .token("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s")  # ❗ Небезпечно — краще .env
         .post_init(setup_jobqueue)
         .build()
     )
@@ -94,7 +94,7 @@ async def run_bot():
     print("✅ Бот запущено")
     await app_bot.run_polling()
 
-# ✅ Старт
+# 🔹 Старт сервера і бота
 if __name__ == "__main__":
     Thread(target=run_flask).start()
     asyncio.run(run_bot())
