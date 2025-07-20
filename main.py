@@ -88,7 +88,7 @@ async def setup_jobqueue(app):
 async def run_bot():
     app_bot = (
         ApplicationBuilder()
-        .token(os.environ.get("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s"))
+        .token("7554974295:AAF9p2Ve9vL-y-Yt9zJ_FoMywmbymHwlz6s")
         .post_init(setup_jobqueue)
         .build()
     )
